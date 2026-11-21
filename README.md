@@ -1,5 +1,10 @@
 # Vale for the web
 
+> [!NOTE]
+> This extension was built with a $10,000 grant from
+> [FLOSS/fund](https://floss.fund/blog/second-tranche-2025-anniversary/), in its
+> second 2025 tranche. Thank you.
+
 Vale's browser extension brings your style guide to the fields you write in:
 GitHub and GitLab comments, pull-request descriptions, and the web editor, and
 any other site you turn it on for. Alerts are underlined as you type, and a
@@ -82,8 +87,3 @@ Load `.output/chrome-mv3` as an unpacked extension at `chrome://extensions`
 
 The module and its loader come from a Vale release's `vale_<version>_wasm.tar.gz`,
 or from a checkout's `make wasm`.
-
-## Thanks
-
-Vale is funded by [FLOSS/fund](https://floss.fund/blog/second-tranche-2025-anniversary/),
-with a $10,000 grant in its second 2025 tranche. Thank you.
