@@ -14,7 +14,7 @@ Linting runs entirely in your browser. The extension carries Vale's
 WebAssembly build and reads your configuration and packages from its own
 storage; nothing is sent anywhere.
 
-![A comment box with three underlined phrases in different colors and a popover on one of them reading "Use 'to' instead of 'in order to'" with a button that applies it.](store/screenshots/1-as-you-type.png)
+![A browser window on a comment box, with marks under five phrases in three colors and a card open on "utilize" that offers "use" as its fix.](store/screenshots/1-as-you-type.png)
 
 ## How it decides what to check
 
@@ -35,7 +35,7 @@ Two modes, in the popup:
 The options page holds the profile: the configuration, its packages, and the
 sites linting is on for.
 
-![The options page with a configuration, a synced package, and the sites table.](store/screenshots/4-options.png)
+![A browser window on the options page: the .vale.ini on the left, and the rules it turns on at right.](store/screenshots/4-options.png)
 
 ## Browsers
 
