@@ -44,6 +44,12 @@ Privacy policy: https://vale.sh/privacy/extension
 Vale is open source under the MIT license: https://vale.sh
 ```
 
+## Support and homepage
+
+- Support: https://github.com/vale-cli/vale-web/issues
+- Homepage: https://vale.sh/#browser
+- Source: https://github.com/vale-cli/vale-web
+
 ## Category
 
 Chrome: Developer Tools. Firefox: Language Support, or Other.
