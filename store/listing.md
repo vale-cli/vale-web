@@ -30,6 +30,7 @@ WHAT IT DOES
 • Underlines each alert as you type, with no wait, in text areas, inputs, frames, and rich editors (ProseMirror, TipTap, Lexical, Slate, Quill, CKEditor) on the sites you turn it on for.
 • Opens a card on a click, or with Alt+Enter at the cursor: the alert, its fixes one click away, and Dismiss, Turn off the rule, or Add to vocabulary. Alt+Shift+Enter applies the first fix without opening the card.
 • Uses one configuration everywhere: a .vale.ini, packages from the Vale package library, and your own house style uploaded as a .zip. The built-in style works with no setup at all.
+• Reads Markdown, AsciiDoc, reStructuredText, HTML, and plain text. In GitHub's and GitLab's file editors, the file's extension picks the format.
 • Keeps what you've told it from the cards (words added, rules turned off, alerts dismissed) in one place, the Yours tab, where any of it can be undone.
 • Runs on demand instead, if you'd rather: turn off "Check as you type" and check the focused field from the toolbar or with Alt+Shift+V.
 • Follows your system's light or dark theme.
@@ -83,8 +84,9 @@ the extension stores and fetches.
 
 ## Screenshots
 
-All three stores take 1280×800 PNGs, so one set serves them. These are shot
-at 2× and scaled to exactly 1280×800; Chrome rejects any other size.
+All three stores take 1280×800 PNGs, so one set serves them. Each page is
+shot at 2× inside a drawn browser window, under a one-line headline, and
+scaled to exactly 1280×800; Chrome rejects any other size.
 
 Taken, in `screenshots/`, by `scripts/screenshots/shoot.mjs` against the
 production build (`pnpm build` first):

@@ -52,10 +52,12 @@ A package hosted anywhere else asks for its origin the first time it is synced.
 
 ## Formats
 
-Markdown, HTML, and plain text are checked in the browser. Each site has a
-format, `md` for GitHub and GitLab; add a site with its own on the options
-page. See [the WebAssembly build](https://docs.vale.sh/topics/wasm) for what
-the module supports.
+Markdown, AsciiDoc, reStructuredText, HTML, and plain text are checked in the
+browser; Vale reads all five natively. Each site has a format, Markdown for
+GitHub and GitLab, set on the options page. In GitHub's and GitLab's file
+editors the file's extension decides instead, so a `.rst` file is checked as
+reStructuredText. See [the WebAssembly build](https://docs.vale.sh/topics/wasm)
+for what the module supports.
 
 ## Development
 

@@ -10,6 +10,7 @@
   import CodeEditor from "@/lib/components/CodeEditor.svelte";
   import { valeIniLanguage } from "@/lib/editor/vale-ini";
   import { parsePackages } from "@/lib/packages";
+  import { formats } from "@/lib/format";
   import type { ResolvedConfig, SyncResponse } from "@/lib/messages";
   import { bytesToBase64, defaultINI, defaultSettings, loadSettings, saveSettings, type Settings } from "@/lib/settings";
   import BookOpenIcon from "@lucide/svelte/icons/book-open";
@@ -76,6 +77,11 @@
 
   let saveTimer: number | undefined;
   // Edits apply live: the profile is saved shortly after each change.
+  // The formats to offer a site: the list, and the site's own if it isn't on it.
+  function formatOptions(current: string) {
+    return formats.some((f) => f.id === current) ? formats : [...formats, { id: current, label: current }];
+  }
+
   function changed() {
     saveState = "unsaved";
     window.clearTimeout(saveTimer);
@@ -360,17 +366,26 @@
                 <div class="flex items-center gap-3 border-b px-3 py-2 last:border-b-0">
                   <Switch id="site-{host}" size="sm" bind:checked={site.enabled} onCheckedChange={changed} />
                   <label for="site-{host}" class="truncate">{host}</label>
-                  <Badge variant="outline" class="ml-auto font-mono">{site.format}</Badge>
+                  <select
+                    aria-label="Format for {host}"
+                    class="border-input bg-background ml-auto h-7 rounded-md border px-2 text-xs"
+                    bind:value={site.format}
+                    onchange={changed}
+                  >
+                    {#each formatOptions(site.format) as f (f.id)}<option value={f.id}>{f.label}</option>{/each}
+                  </select>
                   <Button size="icon-sm" variant="ghost" aria-label="Remove {host}" onclick={() => removeSite(host)}><TrashIcon /></Button>
                 </div>
               {/each}
             </div>
             <div class="flex items-center gap-2">
               <Input placeholder="example.com" bind:value={newHost} class="flex-1" />
-              <Input placeholder="md" bind:value={newFormat} class="w-16 font-mono" />
+              <select aria-label="Format" class="border-input bg-background h-8 rounded-md border px-2 text-xs" bind:value={newFormat}>
+                {#each formats as f (f.id)}<option value={f.id}>{f.label}</option>{/each}
+              </select>
               <Button size="sm" variant="secondary" onclick={addSite}><PlusIcon data-icon="inline-start" />Add</Button>
             </div>
-            <p class="text-muted-foreground text-xs">The format is what the text in a site's editors is written in: <code>md</code> for Markdown, <code>txt</code> for plain text.</p>
+            <p class="text-muted-foreground text-xs">The format is what the text in a site's editors is written in. In GitHub's and GitLab's file editors, the file's own extension decides: a <code>.rst</code> file is checked as reStructuredText.</p>
           {/if}
         </div>
       </aside>

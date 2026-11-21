@@ -5,6 +5,7 @@ import { fetchPackage, parsePackages, parseStylesPath } from "@/lib/packages";
 import { base64ToBytes, bytesToBase64, dismissKey, hostOf, loadSettings, saveSettings, siteFor, type Settings } from "@/lib/settings";
 import { acceptFile, vocabPath, withVocab } from "@/lib/vocab";
 import { offsetsOf } from "@/lib/text/positions";
+import { formatFor } from "@/lib/format";
 
 // A resolved configuration: the INI to lint under and the packages it needs
 // in the in-memory filesystem.
@@ -70,7 +71,7 @@ async function remember(change: (s: Settings) => void): Promise<void> {
 
 async function lint(text: string, url: string): Promise<LintResponse> {
   const s = await loadSettings();
-  const format = siteFor(s, hostOf(url)).format;
+  const format = formatFor(url, siteFor(s, hostOf(url)).format);
   const cfg = await resolve(url);
   if (!cfg) return { alerts: [], source: "off", format };
   try {
@@ -104,7 +105,7 @@ async function status(url: string): Promise<StatusResponse> {
     delay: s.delay ?? 0,
     hover: s.hover,
     host,
-    format: site.format,
+    format: formatFor(url, site.format),
     source: site.enabled ? "profile" : "off",
     ready: engine.isReady(),
   };

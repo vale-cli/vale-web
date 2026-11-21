@@ -1,7 +1,8 @@
 // The card: a click opens it and it stays; a fix applies; Alt+Enter opens it
 // with focus, the arrows walk it, and Escape puts the caret back; and an
 // added word, a dismissal, and a turned-off rule stay gone after a relint;
-// and a repository's page is checked with the profile, like any other.
+// a repository's page is checked with the profile, like any other; and a
+// file in GitHub's editor is read in its own format.
 //
 //   pnpm build
 //   node scripts/e2e/card.mjs
@@ -79,6 +80,16 @@ await gh.locator("#comment").click(); await gh.locator("#comment").fill("We can 
 const ghMarks = async () => gh.evaluate(() => [...document.querySelectorAll("#vale-overlay > div:first-child > div")].map((d) => d.dataset.check));
 const t7 = Date.now(); while (!(await ghMarks()).includes("Demo.Wordy") && Date.now() - t7 < 30000) await gh.waitForTimeout(50);
 out.github = await ghMarks();
+// 8. GitHub's file editor reads the file's format: in .rst, a code-block's
+// "Teh" isn't prose, though Markdown would take the three-space indent as text.
+await ctx.route("https://github.com/vale-cli/vale/edit/main/docs/guide.rst", (r) => r.fulfill({ contentType: "text/html", body: fs.readFileSync(htmlPath) }));
+const rst = await ctx.newPage(); await rst.goto("https://github.com/vale-cli/vale/edit/main/docs/guide.rst");
+await rst.locator("#comment").click();
+await rst.locator("#comment").fill("Guide\n=====\n\nYou will recieve it.\n\n.. code-block:: go\n\n   fmt.Println(\"Teh\")\n");
+const rstMarks = () => rst.evaluate(() => [...document.querySelectorAll("#vale-overlay > div:first-child > div")].length);
+const t8 = Date.now(); while ((await rstMarks()) < 1 && Date.now() - t8 < 30000) await rst.waitForTimeout(50);
+await rst.waitForTimeout(800);
+out.rst = await rstMarks();
 const checks = {
   "a click opens the card": out.clickOpens,
   "it stays when the pointer leaves": out.staysWhenPointerLeaves,
@@ -90,6 +101,7 @@ const checks = {
   "a dismissal holds": out.afterDismiss.length === 0,
   "a turned-off rule stays off": out.turnOff.marksBefore.length > 0 && out.turnOff.after.length === 0,
   "a repository page uses the profile": out.github.includes("Demo.Wordy"),
+  "a .rst file in GitHub's editor is read as reStructuredText": out.rst === 1,
 };
 let failed = 0;
 for (const [name, ok] of Object.entries(checks)) {
