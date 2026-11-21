@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Add a comment</title>
+<style>
+  body { margin: 0; background: #f6f8fa; font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif; color: #1f2328; }
+  .wrap { max-width: 880px; margin: 48px auto; }
+  .head { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; color: #59636e; }
+  .avatar { width: 32px; height: 32px; border-radius: 50%; background: #d0d7de; }
+  .box { background: #fff; border: 1px solid #d0d7de; border-radius: 6px; }
+  .tabs { display: flex; border-bottom: 1px solid #d0d7de; padding: 0 8px; background: #f6f8fa; border-radius: 6px 6px 0 0; }
+  .tab { padding: 10px 14px; font-weight: 500; }
+  .tab.on { background: #fff; border: 1px solid #d0d7de; border-bottom-color: #fff; margin-bottom: -1px; border-radius: 6px 6px 0 0; }
+  textarea { display: block; width: 100%; box-sizing: border-box; min-height: 190px; padding: 12px; border: 0; border-radius: 0 0 6px 6px; font: 14px/1.6 ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace; resize: vertical; outline: none; }
+  .foot { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-top: 1px solid #d0d7de; color: #59636e; font-size: 12px; }
+  .btn { background: #1f883d; color: #fff; border: 1px solid rgba(31,35,40,.15); border-radius: 6px; padding: 6px 16px; font-weight: 500; }
+</style></head>
+<body><div class="wrap">
+  <div class="head"><div class="avatar"></div><strong>Add a comment</strong></div>
+  <div class="box">
+    <div class="tabs"><div class="tab on">Write</div><div class="tab">Preview</div></div>
+    <textarea id="comment" aria-label="Comment body" placeholder="Add your comment here..."></textarea>
+    <div class="foot"><span>Markdown is supported</span><button class="btn" type="button">Comment</button></div>
+  </div>
+</div></body></html>

@@ -1,0 +1,33 @@
+version: "3"
+
+vars:
+  PNPM: corepack pnpm@10.11.0
+
+tasks:
+  install:
+    desc: Install dependencies
+    cmds: ["{{.PNPM}} install"]
+  dev:
+    desc: Chromium development build with reload
+    cmds: ["{{.PNPM}} dev"]
+  dev-firefox:
+    desc: Firefox development build with reload
+    cmds: ["{{.PNPM}} dev:firefox"]
+  build:
+    desc: Chromium production build (.output/chrome-mv3)
+    cmds: ["{{.PNPM}} build"]
+  build-firefox:
+    desc: Firefox production build (.output/firefox-mv3)
+    cmds: ["{{.PNPM}} build:firefox"]
+  zip:
+    desc: Store archives for both browsers
+    cmds: ["{{.PNPM}} zip", "{{.PNPM}} zip:firefox"]
+  test:
+    desc: Unit tests and type checks
+    cmds: ["{{.PNPM}} test", "{{.PNPM}} check"]
+  e2e:
+    desc: The extension in Chromium against real editors (needs a build and Playwright)
+    cmds: ["node scripts/e2e/card.mjs", "node scripts/e2e/options.mjs", "node scripts/e2e/editors.mjs"]
+  wasm:
+    desc: Refresh public/vale.wasm from ../vale (or pass a release archive)
+    cmds: ["{{.PNPM}} wasm {{.CLI_ARGS}}"]
