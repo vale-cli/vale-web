@@ -1,22 +1,70 @@
-# Vale for the web
+<div align="center">
+  <a href="https://vale.sh">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://vale.sh/brand/vale-logo-white.svg">
+      <img src="https://vale.sh/brand/vale-logo.svg" alt="Vale" width="200">
+    </picture>
+  </a>
+  <h3>Your style guide, as you type.</h3>
+  <p>
+    Vale's browser extension checks what you write on the web, from a pull-request<br>
+    description to an email, against your Vale configuration. Nothing leaves your browser.
+  </p>
+  <p>
+    <a href="https://vale.sh/#browser">Install</a> ·
+    <a href="https://vale.sh/privacy/extension">Privacy</a> ·
+    <a href="https://docs.vale.sh">Vale docs</a> ·
+    <a href="https://vale.sh/explorer">Package Explorer</a> ·
+    <a href="https://discord.gg/NTX6Xggryj">Discord</a>
+  </p>
+</div>
+
+<p align="center">
+  <img width="80%" alt="A browser window on a comment box, with marks under five phrases in three colors and a card open on &quot;utilize&quot; that offers &quot;use&quot; as its fix." src="store/screenshots/1-as-you-type.png">
+</p>
 
 > [!NOTE]
 > This extension was built with a $10,000 grant from
 > [FLOSS/fund](https://floss.fund/blog/second-tranche-2025-anniversary/), in its
 > second 2025 tranche. Thank you.
 
-Vale's browser extension brings your style guide to the fields you write in:
-GitHub and GitLab comments, pull-request descriptions, and the web editor, and
-any other site you turn it on for. Alerts are underlined as you type, and a
-popover on each one explains it and applies the fix.
+Alerts are underlined as you type, in text areas, inputs, and rich editors,
+on GitHub, GitLab, and any other site you turn it on for. Each one opens a
+card with its reason and its fix. Vale's WebAssembly build runs inside the
+extension and reads your configuration from its own storage, so your text is
+never sent anywhere.
 
-Linting runs entirely in your browser. The extension carries Vale's
-WebAssembly build and reads your configuration and packages from its own
-storage; nothing is sent anywhere.
+## Install
 
-![A browser window on a comment box, with marks under five phrases in three colors and a card open on "utilize" that offers "use" as its fix.](store/screenshots/1-as-you-type.png)
+The extension is in review for the Chrome Web Store, with Edge and Firefox to
+follow; [vale.sh](https://vale.sh/#browser) links each listing as it goes live.
+Until then, build it from source: see [Development](#development).
 
-## How it decides what to check
+## Using it
+
+Click a mark, or press <kbd>Alt</kbd>+<kbd>Enter</kbd> with the cursor in one,
+for its card: the message, its fixes, and three ways to deal with it.
+
+- **Dismiss** hides that one alert, where it stands.
+- **Turn off** stops the rule everywhere.
+- **Add to vocabulary** accepts a word the spelling rules flagged.
+
+| Key | In a field |
+| --- | --- |
+| <kbd>Alt</kbd>+<kbd>Enter</kbd> | Open the card at the cursor; the arrows walk it and <kbd>Enter</kbd> applies |
+| <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>Enter</kbd> | Apply the first fix without opening the card |
+| <kbd>Esc</kbd> | Close the card and put the cursor back |
+| <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd> | Check the focused field, when checking as you type is off |
+
+Everything you've said from a card is listed on the options page's **Yours**
+tab, where any of it can be undone.
+
+It's tested in plain text areas and inputs, in fields inside frames and shadow
+DOM, and in ProseMirror, TipTap, Lexical, Slate, Quill, and CKEditor.
+
+![A browser window on a comment box, with a spelling card opened from the keyboard: suggestions, Dismiss, Add to vocabulary, and Turn off.](store/screenshots/2-keyboard.png)
+
+## Configuration
 
 One profile, on every site that's on: a `.vale.ini`, the packages it names
 (synced from the [package library](https://vale.sh/explorer) or uploaded as a
@@ -87,3 +135,9 @@ Load `.output/chrome-mv3` as an unpacked extension at `chrome://extensions`
 
 The module and its loader come from a Vale release's `vale_<version>_wasm.tar.gz`,
 or from a checkout's `make wasm`.
+
+## License
+
+MIT. Questions and bug reports go to the
+[issue tracker](https://github.com/vale-cli/vale-web/issues) or
+[Discord](https://discord.gg/NTX6Xggryj).
