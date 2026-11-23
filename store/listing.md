@@ -6,42 +6,43 @@ list at the end.
 
 ## Name
 
-Vale
+Style Guide & Spell Checker - Vale
 
 ## Short description
 
 Chrome (132 characters max):
 
-> Your style guide, applied as you type, on any site. Bring your own Vale config and styles; it all runs inside your browser.
+> Check your writing against your style guide as you type, on any site. Private: your text never leaves your browser.
 
 Firefox summary (250 characters max):
 
-> Vale underlines style issues as you type and offers the fix. One configuration works on every site you turn on: the built-in style, packages from the Vale library, or your own house style uploaded as a .zip. Everything runs in your browser.
+> Check your writing against your style guide as you type, on any site. Use the Microsoft or Google style guide, or your team's own. Private: your text never leaves your browser.
 
 ## Description
 
 Plain text: Chrome and Edge don't render Markdown. Firefox takes the same.
 
 ```text
-Vale is the prose linter that documentation teams at AWS, NVIDIA, Microsoft, GitLab, and Red Hat use to enforce a style guide in CI. This extension brings the same checks to the places you write in a browser.
+Vale checks your writing against a style guide as you type: in comment boxes, issues, pull requests, email, and anywhere else you write in a browser. It's the same prose linter documentation teams run in CI, and it runs entirely on your device.
 
-WHAT IT DOES
+WHAT IT CHECKS
 
-• Underlines each alert as you type, with no wait, in text areas, inputs, frames, and rich editors (ProseMirror, TipTap, Lexical, Slate, Quill, CKEditor) on the sites you turn it on for.
-• Opens a card on a click, or with Alt+Enter at the cursor: the alert, its fixes one click away, and Dismiss, Turn off the rule, or Add to vocabulary. Alt+Shift+Enter applies the first fix without opening the card.
-• Uses one configuration everywhere: a .vale.ini, packages from the Vale package library, and your own house style uploaded as a .zip. The built-in style works with no setup at all.
-• Reads Markdown, AsciiDoc, reStructuredText, HTML, and plain text. In GitHub's and GitLab's file editors, the file's extension picks the format.
-• Keeps what you've told it from the cards (words added, rules turned off, alerts dismissed) in one place, the Yours tab, where any of it can be undone.
-• Runs on demand instead, if you'd rather: turn off "Check as you type" and check the focused field from the toolbar or with Alt+Shift+V.
-• Follows your system's light or dark theme.
+Spelling, word choice, terminology, capitalization, wordiness, and whatever else your style guide says. Start with the built-in style, add a published one such as the Microsoft or Google style guide, or upload your team's own house style.
 
-WHAT IT DOESN'T DO
+HOW IT WORKS
 
-• Send your text anywhere. Vale runs inside the extension, so checking happens in your browser. The only network requests download packages from the Vale package library or a package URL you add.
-• Collect anything. There is no account, no analytics, and no telemetry.
+• Underlines issues as you type, on the sites you turn it on for. GitHub and GitLab are on from the start.
+• Click an underline, or press Alt+Enter, to see the fix and apply it in one click. You can also dismiss the issue, turn the rule off, or add the word to your vocabulary.
+• Checks Markdown, AsciiDoc, reStructuredText, HTML, and plain text. When you edit a file on GitHub or GitLab, it reads the file's format from its name.
+• Keeps the words you've added, rules you've turned off, and issues you've dismissed in one list, where any of it can be undone.
+• Checks on demand if you'd rather: turn off checking as you type, and check a field from the toolbar or with Alt+Shift+V.
+
+PRIVATE BY DESIGN
+
+Your text never leaves your browser. There is no account, no analytics, and no telemetry. The only downloads are the style guides you choose.
 
 Privacy policy: https://vale.sh/privacy/extension
-Vale is open source under the MIT license: https://vale.sh
+Free and open source under the MIT license: https://vale.sh
 ```
 
 ## Support and homepage
@@ -52,7 +53,7 @@ Vale is open source under the MIT license: https://vale.sh
 
 ## Category
 
-Chrome: Developer Tools. Firefox: Language Support, or Other.
+Chrome: Communication. Firefox: Language Support.
 
 ## Single purpose (Chrome)
 

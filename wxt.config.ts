@@ -15,10 +15,12 @@ export default defineConfig({
         data_collection_permissions: { required: ["none"] },
       },
     },
-    name: "Vale",
+    name: "Style Guide & Spell Checker - Vale",
+    short_name: "Vale",
     // The details page in each browser links here.
     homepage_url: "https://github.com/vale-cli/vale-web",
-    description: "Your style guide, applied as you type. Lints in your browser; nothing leaves it.",
+    description:
+      "Check your writing against your style guide as you type, on any site. Private: your text never leaves your browser.",
     permissions: ["storage", "unlimitedStorage", "activeTab"],
     // The engine is WebAssembly compiled from a file inside the package;
     // MV3's default policy forbids compiling it without this allowance.
