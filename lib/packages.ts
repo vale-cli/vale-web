@@ -65,3 +65,12 @@ export function parseStylesPath(ini: string): string {
   }
   return "styles";
 }
+
+/**
+ * stylesMarker is an empty file that makes a StylesPath exist: the engine
+ * refuses a configuration whose StylesPath is missing, and one with no
+ * packages yet has nothing else there.
+ */
+export function stylesMarker(prefix: string): string {
+  return prefix.replace(/\/+$/, "") + "/.keep";
+}

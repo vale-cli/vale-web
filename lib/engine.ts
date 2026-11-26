@@ -42,6 +42,7 @@ declare global {
 
 // Bundled rather than fetched: a service worker can't import() at runtime.
 import "./vendor/wasm_exec.js";
+import { plain } from "./errors";
 
 const vale = globalThis as unknown as Partial<ValeGlobals>;
 
@@ -87,7 +88,7 @@ export function isReady(): boolean {
 }
 
 function unwrap<T>(r: Result<T>): T {
-  if (r.error) throw new Error(r.error);
+  if (r.error) throw new Error(plain(r.error));
   return r;
 }
 
@@ -115,7 +116,10 @@ export async function suggest(alert: ValeAlert, ini: string): Promise<string[]> 
 
 export async function resolveConfig<T>(ini: string): Promise<T> {
   await ready();
-  return JSON.parse(unwrap(vale.ValeResolveConfig!(ini)).result ?? "{}") as T;
+  const resolved = JSON.parse(unwrap(vale.ValeResolveConfig!(ini)).result ?? "{}") as T & { error?: string };
+  // A configuration that doesn't load comes back as a result with its error.
+  if (resolved.error) resolved.error = plain(resolved.error);
+  return resolved;
 }
 
 export async function resetFS(): Promise<void> {

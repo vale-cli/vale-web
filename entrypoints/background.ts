@@ -1,7 +1,7 @@
 import * as engine from "@/lib/engine";
 import type { ValeAlert } from "@/lib/engine";
 import type { Request, LintResponse, ResolvedConfig, StatusResponse, SuggestResponse, SyncResponse } from "@/lib/messages";
-import { fetchPackage, parsePackages, parseStylesPath } from "@/lib/packages";
+import { fetchPackage, parsePackages, parseStylesPath, stylesMarker } from "@/lib/packages";
 import { base64ToBytes, bytesToBase64, dismissKey, hostOf, loadSettings, saveSettings, siteFor, type Settings } from "@/lib/settings";
 import { acceptFile, vocabPath, withVocab } from "@/lib/vocab";
 import { offsetsOf } from "@/lib/text/positions";
@@ -39,6 +39,7 @@ async function load(cfg: Config, vocab: string[]): Promise<void> {
     prefix + "\0" + cfg.packages.map((p) => `${p.name}:${p.bytes.length}`).join(",") + "\0" + vocab.join("\n");
   if (fingerprint === loaded) return;
   await engine.resetFS();
+  await engine.addFile(stylesMarker(prefix), "");
   for (const p of cfg.packages) await engine.addPackage(prefix, p.bytes);
   if (vocab.length) await engine.addFile(vocabPath(prefix), acceptFile(vocab));
   loaded = fingerprint;

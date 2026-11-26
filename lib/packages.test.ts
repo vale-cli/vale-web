@@ -1,4 +1,4 @@
-import { parsePackages, parseStylesPath, resolvePackage } from "./packages";
+import { parsePackages, parseStylesPath, resolvePackage, stylesMarker } from "./packages";
 
 describe("packages", () => {
   it("reads the top-level Packages key only", () => {
@@ -13,5 +13,9 @@ describe("packages", () => {
   it("reads StylesPath with a default", () => {
     expect(parseStylesPath("StylesPath = ./.github/styles\n")).toBe(".github/styles");
     expect(parseStylesPath("[*]\n")).toBe("styles");
+  });
+  it("marks a StylesPath so it exists with nothing in it", () => {
+    expect(stylesMarker("/styles")).toBe("/styles/.keep");
+    expect(stylesMarker("/.github/styles/")).toBe("/.github/styles/.keep");
   });
 });

@@ -125,7 +125,8 @@ has none. Made in the vale.sh repository's `video/` (`ExtensionPromo`, and
 `icon-128.png` is the Chrome and Firefox store icon: the 512 drawn at 96×96 with
 16px of clear space around it, as Chrome's image guidelines ask; `icon-512.png` is the
 Edge logo. The extension's own icons are in
-`public/icon/`, 16 through 128, rendered from `src/icon.svg`.
+`public/icon/`: 128 is rendered from `src/icon.svg`, and 16, 32 and 48 from
+`src/icon-small.svg`, where the mark is larger so it reads in a toolbar.
 
 ## Edge
 
