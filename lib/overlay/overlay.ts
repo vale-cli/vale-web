@@ -13,7 +13,45 @@ export type CardActions = {
   addWord: (p: Placed) => void;
   // Called when the card closes from the keyboard, to put the caret back.
   restore: () => void;
+  // Called when the field's badge is clicked while it counts alerts.
+  first: () => void;
 };
+
+/** What the badge in a field's corner says about the last check. */
+export type Status =
+  | { state: "busy" | "clean" }
+  | { state: "alerts"; count: number; severity: string }
+  | { state: "error"; message: string };
+
+/**
+ * badgeText is what the badge shows beside Vale's mark, and what it says
+ * when pointed at. A clean field shows the mark alone.
+ */
+export function badgeText(s: Status): { text: string; label: string } {
+  switch (s.state) {
+    case "busy":
+      return { text: "…", label: "Vale is checking" };
+    case "clean":
+      return { text: "", label: "Vale found nothing" };
+    case "alerts":
+      return { text: s.count > 99 ? "99+" : String(s.count), label: `Vale: ${s.count} ${s.count === 1 ? "alert" : "alerts"}` };
+    case "error":
+      return { text: "!", label: `Vale couldn't check this field: ${s.message}` };
+  }
+}
+
+// A field shorter than this is one line, and a badge would sit on its text.
+const badgeMinHeight = 44;
+
+// Vale's mark and its two icons, as the brand draws them: light grass on
+// graphite, and grass on paper. The badge takes the one that stands out
+// from the page.
+const markPath = "M0 40 32 40 72 120 40 120ZM96 0 128 0 86 84 70 52Z";
+const icons = {
+  graphite: { ground: "#0e100c", mark: "#90d454", text: "#f7f9f3" },
+  paper: { ground: "#f7f9f3", mark: "#62a527", text: "#12150e" },
+};
+const icon = () => (window.matchMedia("(prefers-color-scheme: dark)").matches ? icons.paper : icons.graphite);
 
 /** canAddWord reports whether an alert is about a word the user could accept. */
 export function canAddWord(a: ValeAlert): boolean {
@@ -35,6 +73,9 @@ const palette = () => (window.matchMedia("(prefers-color-scheme: dark)").matches
 export class Overlay {
   private root: HTMLDivElement;
   private marks: HTMLDivElement;
+  private badge: HTMLButtonElement;
+  private mark: SVGPathElement;
+  private chip: HTMLSpanElement;
   private pop: HTMLDivElement;
   private placed: Placed[] = [];
   private hideTimer: number | undefined;
@@ -71,7 +112,37 @@ export class Overlay {
     this.pop.addEventListener("mouseleave", () => {
       if (this.hovered) this.hideSoon();
     });
-    this.root.append(this.marks, this.pop);
+    this.badge = document.createElement("button");
+    this.badge.type = "button";
+    Object.assign(this.badge.style, {
+      position: "absolute", display: "none", pointerEvents: "auto", boxSizing: "border-box",
+      alignItems: "center", height: "22px", padding: "0", border: "0", borderRadius: "11px",
+      boxShadow: "0 1px 2px rgba(0,0,0,.25)",
+    });
+    // The mark sits in its square as it does in Vale's icon: six tenths
+    // of the width.
+    const ns = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(ns, "svg");
+    svg.setAttribute("viewBox", "0 0 128 120");
+    svg.setAttribute("aria-hidden", "true");
+    Object.assign(svg.style, { width: "13px", height: "12px", margin: "0 4.5px", flex: "none", display: "block" });
+    this.mark = document.createElementNS(ns, "path");
+    this.mark.setAttribute("d", markPath);
+    svg.appendChild(this.mark);
+    this.chip = document.createElement("span");
+    Object.assign(this.chip.style, {
+      boxSizing: "border-box", minWidth: "16px", height: "16px", margin: "0 3px 0 -1px", padding: "0 4px",
+      borderRadius: "8px", textAlign: "center",
+      font: "600 10px/16px ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif",
+    });
+    this.badge.append(svg, this.chip);
+    // A click must not take focus from the field; see button.
+    this.badge.addEventListener("mousedown", (e) => e.preventDefault());
+    this.badge.addEventListener("click", () => {
+      if (this.badge.dataset.state === "alerts") this.actions.first();
+    });
+    // Between the marks and the card: both are found by their place.
+    this.root.append(this.marks, this.badge, this.pop);
     // On <html>, not <body>: in a framed editor the body is the editable,
     // and the card would become part of the text being checked.
     document.documentElement.appendChild(this.root);
@@ -98,9 +169,39 @@ export class Overlay {
     }
   }
 
+  /**
+   * status puts the badge in the corner of the field at `field`, saying how
+   * its last check went; with no status, or a one-line field, it's hidden.
+   */
+  status(field: DOMRect | null, s: Status | null): void {
+    if (!field || !s || field.height < badgeMinHeight) {
+      this.badge.style.display = "none";
+      return;
+    }
+    const { text, label } = badgeText(s);
+    const c = icon();
+    this.mark.setAttribute("fill", c.mark);
+    this.chip.textContent = text;
+    Object.assign(this.chip.style, {
+      display: text ? "block" : "none",
+      background: s.state === "alerts" ? (colors[s.severity] ?? colors.suggestion!) : "transparent",
+      color: s.state === "alerts" ? "#fff" : c.text,
+    });
+    this.badge.title = label;
+    this.badge.setAttribute("aria-label", label);
+    this.badge.dataset.state = s.state;
+    Object.assign(this.badge.style, {
+      display: "flex", background: c.ground, cursor: s.state === "alerts" ? "pointer" : "default",
+    });
+    // Clear of the corner, where a textarea has its resize handle.
+    this.badge.style.left = `${field.right - this.badge.offsetWidth - 14 + window.scrollX}px`;
+    this.badge.style.top = `${field.bottom - 32 + window.scrollY}px`;
+  }
+
   clear(): void {
     this.placed = [];
     this.marks.replaceChildren();
+    this.badge.style.display = "none";
     this.hide();
   }
 

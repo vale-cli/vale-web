@@ -1,6 +1,6 @@
 import type { ValeAlert } from "@/lib/engine";
 import type { LintResponse, StatusResponse, SuggestResponse } from "@/lib/messages";
-import { Overlay, type Placed } from "@/lib/overlay/overlay";
+import { Overlay, type Placed, type Status } from "@/lib/overlay/overlay";
 import { mapText, offsetAt, rangeOf, type TextMap } from "@/lib/text/editable";
 import { offsetsOf } from "@/lib/text/positions";
 import { remap } from "@/lib/text/remap";
@@ -99,6 +99,10 @@ export default defineContentScript({
     let changing = false;
     let frame: number | undefined;
     let lastBox = "";
+    // How the field's last check went, for its badge: whether one has come
+    // back, and what it said if it failed.
+    let checked = false;
+    let failure = "";
 
     const send = <T,>(msg: unknown) => browser.runtime.sendMessage(msg) as Promise<T>;
 
@@ -147,7 +151,27 @@ export default defineContentScript({
       });
     };
 
-    const redraw = () => overlay?.draw(place());
+    // status is what the field's badge says: nothing for an empty field or
+    // one not checked yet.
+    const status = (): Status | null => {
+      if (!shown.trim()) return null;
+      if (failure) return { state: "error", message: failure };
+      if (!checked) return inFlight ? { state: "busy" } : null;
+      if (!spans.length) return { state: "clean" };
+      const worst = ["error", "warning", "suggestion"].find((v) => spans.some((s) => s.alert.Severity === v));
+      return { state: "alerts", count: spans.length, severity: worst ?? "suggestion" };
+    };
+
+    const redraw = () => {
+      overlay?.draw(place());
+      overlay?.status(active?.getBoundingClientRect() ?? null, status());
+    };
+
+    // first opens the card of the first mark, for a click on the badge.
+    const first = () => {
+      const hit = place().find((p) => p.rects.length);
+      if (hit) void overlay?.show(hit);
+    };
 
     const apply = async (p: Placed, replacement: string) => {
       if (!active) return;
@@ -234,10 +258,14 @@ export default defineContentScript({
       }
       const hit = cache.get(text);
       if (hit) {
+        checked = true;
+        failure = "";
         show(text, hit);
         return;
       }
       inFlight = true;
+      shown ||= text;
+      redraw();
       try {
         const res = await send<LintResponse>({ type: "lint", text, url: location.href });
         if (active !== field) return;
@@ -251,6 +279,8 @@ export default defineContentScript({
           cache.set(text, alerts);
           if (cache.size > 64) cache.delete(cache.keys().next().value!);
         }
+        checked = true;
+        failure = res.error ?? "";
         show(text, alerts);
       } finally {
         inFlight = false;
@@ -379,7 +409,7 @@ export default defineContentScript({
       if (active === el) return;
       detach();
       active = el;
-      overlay ??= new Overlay({ apply, suggest: suggestFor, dismiss, disable, addWord, restore });
+      overlay ??= new Overlay({ apply, suggest: suggestFor, dismiss, disable, addWord, restore, first });
       el.addEventListener("input", onInput);
       if (!isField(el)) {
         observer = new MutationObserver(onInput);
@@ -438,6 +468,8 @@ export default defineContentScript({
       active = null;
       spans = [];
       shown = "";
+      checked = false;
+      failure = "";
       overlay?.clear();
     };
 

@@ -49,6 +49,11 @@ for its card: the message, its fixes, and three ways to deal with it.
 - **Turn off** stops the rule everywhere.
 - **Add to vocabulary** accepts a word the spelling rules flagged.
 
+A badge in the field's corner, Vale's mark, says how its last check went: the
+mark alone when there's nothing to fix, the number of alerts beside it when
+there is, or `!` when the profile couldn't be loaded. Click a count to open
+the first alert's card.
+
 | Key | In a field |
 | --- | --- |
 | <kbd>Alt</kbd>+<kbd>Enter</kbd> | Open the card at the cursor; the arrows walk it and <kbd>Enter</kbd> applies |

@@ -1,6 +1,6 @@
 // A fresh install: the default profile, no packages synced. The options
 // page resolves it without an error, and a field on a site that's on gets
-// its marks.
+// its marks and its badge.
 //
 //   pnpm build
 //   node scripts/e2e/fresh.mjs
@@ -34,6 +34,23 @@ for (let i = 0; i < 300 && marks.length < 2; i++) {
   marks = await page.evaluate(() => [...document.querySelectorAll("#vale-overlay > div:first-child > div")].map((d) => d.dataset.check));
 }
 assert.deepEqual(marks.sort(), ["Vale.Repetition", "Vale.Spelling"], "the default profile lints");
+
+// The badge in the field's corner counts them, opens the first one's card
+// without taking focus, and is Vale's mark alone once the text is clean.
+const badge = () => page.evaluate(() => { const b = document.querySelector("#vale-overlay > button"); return b && b.style.display !== "none" ? { text: b.textContent, state: b.dataset.state } : null; });
+assert.deepEqual(await badge(), { text: "2", state: "alerts" }, "the badge counts the alerts");
+await page.locator("#vale-overlay > button").click();
+assert.equal(await page.evaluate(() => document.querySelector("#vale-overlay > div:last-child").style.display), "block", "the badge opens a card");
+assert.equal(await page.evaluate(() => document.activeElement?.id), "comment", "the field keeps focus");
+await page.keyboard.press("Escape");
+await ta.fill("This sentence is fine.");
+let clean = null;
+for (let i = 0; i < 300 && clean?.state !== "clean"; i++) { await page.waitForTimeout(100); clean = await badge(); }
+assert.deepEqual(clean, { text: "", state: "clean" }, "a clean field's badge is the mark alone");
+assert.equal(await page.evaluate(() => document.querySelector("#vale-overlay > button path").getAttribute("d")), "M0 40 32 40 72 120 40 120ZM96 0 128 0 86 84 70 52Z", "the badge carries Vale's mark");
+await ta.fill("");
+await page.waitForTimeout(500);
+assert.equal(await badge(), null, "an empty field has no badge");
 
 console.log("ok");
 await ctx.close(); server.close();
