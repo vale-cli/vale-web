@@ -36,9 +36,10 @@ never sent anywhere.
 
 ## Install
 
-The extension is in review for the Chrome Web Store, with Edge and Firefox to
-follow; [vale.sh](https://vale.sh/#browser) links each listing as it goes live.
-Until then, build it from source: see [Development](#development).
+Install it from the [Chrome Web Store](https://chromewebstore.google.com/detail/style-guide-spell-checker/kfmjcegeklidlnjoechfggipjjjahedj).
+Edge and Firefox listings are to follow; [vale.sh](https://vale.sh/#browser)
+links each one as it goes live. Until then, build it from source for those
+browsers: see [Development](#development).
 
 ## Using it
 
