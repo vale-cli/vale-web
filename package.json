@@ -1,7 +1,7 @@
 {
   "name": "vale-web",
   "displayName": "Vale",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Vale, in your browser: your style guide, applied as you type.",
   "author": "jdkato",
   "private": true,
