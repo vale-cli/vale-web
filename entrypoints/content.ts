@@ -106,6 +106,15 @@ export default defineContentScript({
 
     const send = <T,>(msg: unknown) => browser.runtime.sendMessage(msg) as Promise<T>;
 
+    // The toolbar icon follows the browser's light or dark scheme, which
+    // only a page can read. The top frame speaks for the tab.
+    if (window.top === window) {
+      const scheme = window.matchMedia("(prefers-color-scheme: dark)");
+      const report = () => void send({ type: "theme", dark: scheme.matches }).catch(() => undefined);
+      report();
+      scheme.addEventListener("change", report);
+    }
+
     const textOf = (el: Editable): string => {
       if (isField(el)) return el.value;
       map = mapText(el);

@@ -49,6 +49,8 @@ export type ResolvedConfig = {
   sections: ResolvedSection[];
   error?: string;
 };
+// A page reports whether the browser is in its dark scheme, for the toolbar icon.
+export type ThemeRequest = { type: "theme"; dark: boolean };
 export type SyncResponse = { outcomes: { name: string; ok: boolean; error?: string }[] };
 
-export type Request = LintRequest | SuggestRequest | StatusRequest | ToggleRequest | ModeRequest | RunNowRequest | SyncRequest | ResolveRequest | PingRequest | DismissRequest | DisableRuleRequest | AddWordRequest;
+export type Request = LintRequest | SuggestRequest | StatusRequest | ToggleRequest | ModeRequest | RunNowRequest | SyncRequest | ResolveRequest | PingRequest | DismissRequest | DisableRuleRequest | AddWordRequest | ThemeRequest;

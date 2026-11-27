@@ -126,7 +126,16 @@ has none. Made in the vale.sh repository's `video/` (`ExtensionPromo`, and
 16px of clear space around it, as Chrome's image guidelines ask; `icon-512.png` is the
 Edge logo. The extension's own icons are in
 `public/icon/`: 128 is rendered from `src/icon.svg`, and 16, 32 and 48 from
-`src/icon-small.svg`, where the mark is larger so it reads in a toolbar.
+`src/icon-small.svg`, where the mark is larger so it reads at small sizes. The
+toolbar button is the mark alone on a clear background, rendered from
+`src/icon-action.svg` at 16, 24, 32 and 48 in three tones, so it sits with the
+browser's own toolbar icons: `action-on-dark-*` (`#F1F3F4`) for a dark toolbar,
+`action-on-light-*` (`#4A4D51`) for a light one, and `action-*` (`#9AA0A6`), the
+manifest's default until a page reports the scheme. To render one tone:
+
+```sh
+for s in 16 24 32 48; do sed 's/FILL/#F1F3F4/' store/src/icon-action.svg | rsvg-convert -w $s -h $s -o public/icon/action-on-dark-$s.png; done
+```
 
 ## Edge
 

@@ -1,3 +1,4 @@
+import { actionIcon } from "@/lib/icon";
 import * as engine from "@/lib/engine";
 import type { ValeAlert } from "@/lib/engine";
 import type { Request, LintResponse, ResolvedConfig, StatusResponse, SuggestResponse, SyncResponse } from "@/lib/messages";
@@ -235,6 +236,9 @@ export default defineBackground(() => {
             if (word && !s.vocab.includes(word)) s.vocab = [...s.vocab, word];
           }),
         );
+      case "theme":
+        void browser.action.setIcon({ path: actionIcon(msg.dark) });
+        return false;
       default:
         return false;
     }

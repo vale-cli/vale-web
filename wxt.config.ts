@@ -32,7 +32,17 @@ export default defineConfig({
     host_permissions: ["https://github.com/*", "https://raw.githubusercontent.com/*"],
     optional_host_permissions: ["https://*/*"],
     icons: { 16: "icon/16.png", 32: "icon/32.png", 48: "icon/48.png", 128: "icon/128.png" },
-    action: { default_title: "Vale" },
+    // The toolbar button is the mark alone; the tiled icons above are for
+    // the store and the extensions page.
+    action: {
+      default_title: "Vale",
+      default_icon: {
+        16: "icon/action-16.png",
+        24: "icon/action-24.png",
+        32: "icon/action-32.png",
+        48: "icon/action-48.png",
+      },
+    },
     commands: {
       "lint-field": {
         suggested_key: { default: "Alt+Shift+V" },
