@@ -1,0 +1,56 @@
+# Opens a pull request when Vale has a release newer than the one in
+# public/vale.wasm, as vale.json records it.
+name: "Update Vale"
+on:
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compare versions
+        id: vale
+        run: |
+          latest="$(gh api repos/vale-cli/vale/releases/latest --jq .tag_name)"
+          latest="${latest#v}"
+          current="$(jq -r .version vale.json)"
+          echo "latest=$latest" >> "$GITHUB_OUTPUT"
+          # Up to date, or a pull request for this release is already open.
+          if [ "$latest" = "$current" ] || git ls-remote --exit-code --heads origin "vale-$latest" > /dev/null; then
+            echo "update=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "update=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/setup-node@v4
+        if: steps.vale.outputs.update == 'true'
+        with:
+          node-version: 22
+      - name: Refresh the engine and test
+        if: steps.vale.outputs.update == 'true'
+        run: |
+          corepack enable
+          pnpm install --frozen-lockfile
+          bash scripts/wasm.sh "${{ steps.vale.outputs.latest }}"
+          pnpm test
+          pnpm check
+      - name: Open a pull request
+        if: steps.vale.outputs.update == 'true'
+        run: |
+          version="${{ steps.vale.outputs.latest }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "vale-$version"
+          git add vale.json public/vale.wasm lib/vendor/wasm_exec.js
+          git commit -m "chore: Update Vale to v$version"
+          git push origin "vale-$version"
+          gh pr create --title "chore: Update Vale to v$version" \
+            --body "Refreshes \`public/vale.wasm\` and its loader from the [v$version release](https://github.com/vale-cli/vale/releases/tag/v$version). Unit tests and type checks passed on the new engine."

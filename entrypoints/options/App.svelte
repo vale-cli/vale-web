@@ -9,7 +9,7 @@
   import * as ToggleGroup from "@/lib/components/ui/toggle-group";
   import CodeEditor from "@/lib/components/CodeEditor.svelte";
   import { valeIniLanguage } from "@/lib/editor/vale-ini";
-  import { parsePackages } from "@/lib/packages";
+  import { engineVersion, parsePackages } from "@/lib/packages";
   import { formats } from "@/lib/format";
   import type { ResolvedConfig, SyncResponse } from "@/lib/messages";
   import { bytesToBase64, defaultINI, defaultSettings, loadSettings, saveSettings, type Settings } from "@/lib/settings";
@@ -120,6 +120,9 @@
     const failed = res.outcomes.filter((o) => !o.ok);
     if (failed.length) toast.error(failed.map((o) => `${o.name}: ${o.error}`).join("; "));
     else toast.success(res.outcomes.length ? `Synced ${res.outcomes.length} package(s).` : "The configuration names no packages.");
+    // A package that needs a newer Vale than the one built in.
+    const notes = res.outcomes.filter((o) => o.ok && o.note);
+    if (notes.length) toast.info(notes.map((o) => `${o.name} ${o.note}`).join("; "));
     void resolve(settings.ini);
   }
 
@@ -397,6 +400,8 @@
       <span>{Object.values(settings.sites).filter((s) => s.enabled).length} sites on</span>
       <span class="hidden sm:inline">edits apply live · <kbd class="font-mono">{isMac ? "⌘" : "Ctrl+"}S</kbd> saves</span>
       <div class="flex-1"></div>
+      <span>Vale {engineVersion}</span>
+      <Separator orientation="vertical" class="h-3" />
       {#if saveState === "saving"}<span>saving…</span>{:else if saveState === "unsaved"}<span class="text-sev-warn">unsaved</span>{:else}<span>saved</span>{/if}
     </footer>
   {/if}

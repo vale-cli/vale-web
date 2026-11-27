@@ -157,7 +157,7 @@ async function sync(): Promise<SyncResponse> {
     if (got.ok && got.bytes) {
       byName.set(got.name, { name: got.name, data: await bytesToBase64(got.bytes), source: "url", origin: got.url });
     }
-    outcomes.push({ name: got.name, ok: got.ok, error: got.error });
+    outcomes.push({ name: got.name, ok: got.ok, error: got.error, note: got.note });
   }
   s.packages = Array.from(byName.values());
   await saveSettings(s);

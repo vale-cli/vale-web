@@ -132,7 +132,7 @@ task zip            # store archives
 task test           # unit tests and type checks
 task e2e            # the built extension in Chromium: the card, the options page, and fixes in 11 editors
                     # VALE_E2E_BROWSER=/path/to/brave task e2e runs it in another Chromium build
-task wasm           # refresh public/vale.wasm from ../vale, or: task wasm -- vale_3.26.0_wasm.tar.gz
+task wasm -- 3.29.0 # refresh public/vale.wasm from a Vale release; with no version, from ../vale
 ```
 
 Load `.output/chrome-mv3` as an unpacked extension at `chrome://extensions`
@@ -140,7 +140,11 @@ Load `.output/chrome-mv3` as an unpacked extension at `chrome://extensions`
 `about:debugging#/runtime/this-firefox`.
 
 The module and its loader come from a Vale release's `vale_<version>_wasm.tar.gz`,
-or from a checkout's `make wasm`.
+checked against the release's checksums, and `vale.json` records which release
+that is. The options page shows it, and a package that needs a newer Vale is
+installed in the newest release this one supports. The `Update Vale` workflow
+opens a pull request when Vale has a newer release. A checkout's `make wasm`
+is for development: it records the version as `master`.
 
 ## License
 

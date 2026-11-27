@@ -29,5 +29,5 @@ tasks:
     desc: The extension in Chromium against real editors (needs a build and Playwright)
     cmds: ["node scripts/e2e/card.mjs", "node scripts/e2e/options.mjs", "node scripts/e2e/editors.mjs"]
   wasm:
-    desc: Refresh public/vale.wasm from ../vale (or pass a release archive)
+    desc: Refresh public/vale.wasm from a Vale release (task wasm -- 3.29.0), or from ../vale
     cmds: ["{{.PNPM}} wasm {{.CLI_ARGS}}"]
